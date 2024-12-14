@@ -1,0 +1,107 @@
+void main() {
+ runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Music Player',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MusicPlayerScreen(),
+    );
+  }
+}
+
+class MusicPlayerScreen extends StatefulWidget {
+  @override
+  _MusicPlayerScreenState createState() => _MusicPlayerScreenState();
+}
+
+class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
+  AudioPlayer _audioPlayer;
+  String _status = 'Stopped';
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();
+  }
+
+  void _play() async {
+    int result = await _audioPlayer.play('https://www.example.com/your-audio-file.mp3');
+    if (result == 1) {
+      setState(() {
+        _status = 'Playing';
+      });
+    }
+  }
+
+  void _pause() async {
+    int result = await _audioPlayer.pause();
+    if (result == 1) {
+      setState(() {
+        _status = 'Paused';
+      });
+    }
+  }
+
+  void _stop() async {
+    int result = await _audioPlayer.stop();
+    if (result == 1) {
+      setState(() {
+        _status = 'Stopped';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Music Player'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Status: $_status',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _play,
+                  child: Text('Play'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: _pause,
+                  child: Text('Pause'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: _stop,
+                  child: Text('Stop'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
